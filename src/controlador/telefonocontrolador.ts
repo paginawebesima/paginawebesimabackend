@@ -12,5 +12,15 @@ export class TelefonoControlador{
         }
         
     }
+    static obtenerTelefono=async(req:Request,res:Response)=>{
+        try {
+            const telefono= await TelefonoContacto.find({
+
+            })
+            res.json(telefono)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     
 }
