@@ -1,5 +1,6 @@
 import type {Request,Response} from 'express'
 import Preinscripciones from '../modelo/preinscripciones'
+import { param } from 'express-validator';
 
 
 export class PreinscripcionesControlador{
@@ -52,6 +53,19 @@ export class PreinscripcionesControlador{
             }
             await requerimiento.deleteOne()
             res.send("Requerimiento Eliminado")
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    static obtenerRequerimientoId=async(req:Request,res:Response)=>{
+        const {id} = req.params
+        try {
+            const requerimiento = await Preinscripciones.findById(id)
+            if(!requerimiento){
+                const error = new Error('Requerimiento no encontrado')
+                return res.status(404).json({error:error.message})
+            }
+            res.json(requerimiento)            
         } catch (error) {
             console.log(error)
         }

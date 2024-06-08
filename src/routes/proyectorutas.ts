@@ -10,6 +10,12 @@ const rutas = Router();
 
 rutas.get('/obtenerRequerimientos',PreinscripcionesControlador.obtenerRequerimientos)
 
+rutas.get('/requerimiento/:id',
+    param('id').isMongoId().withMessage('ID no es valido'),
+    handleInputErrors,
+    PreinscripcionesControlador.obtenerRequerimientoId
+)
+
 rutas.post('/preinscripciones',
     body('titulo').notEmpty().withMessage("El titulo es obligatorio"),
     body('requerimiento1').notEmpty().withMessage("Es obligatorio un requerimiento de preinscripcion"),
