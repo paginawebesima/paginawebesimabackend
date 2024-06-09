@@ -10,7 +10,7 @@ const TelefonoShema:Schema=new Schema({
         require:true,
         trim:true
     }
-},{timestamps:true})
+})
 
 
 const TelefonoContacto=mongoose.model<ITelefono>('Telefono',TelefonoShema)

@@ -46,4 +46,24 @@ TelefonoControlador.creartelefono)
 
 rutas.get('/obtenerTelefono',TelefonoControlador.obtenerTelefono)
 
+rutas.get('/obtenerTelefono/:id',
+    param('id').isMongoId().withMessage("ID no es valido"),
+    handleInputErrors,
+    TelefonoControlador.obtenerTelefonoById
+)
+
+
+rutas.put('/actualizar/:id',
+    param('id').isMongoId().withMessage("ID no valido"),
+    body('telefono').notEmpty().withMessage("El telefono es obligatorio"),
+    handleInputErrors,
+    TelefonoControlador.actualizarTelefono
+)
+
+rutas.delete('/eliminarTel/:id',
+    param('id').isMongoId().withMessage("ID no valido"),
+    handleInputErrors,
+    TelefonoControlador.eliminarTelefono
+)
+
 export default rutas;
