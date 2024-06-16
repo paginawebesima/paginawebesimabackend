@@ -10,7 +10,7 @@ dotenv.config();
 
 conexionBaseDeDatos();
 const servidor = express();
-servidor.use(cors(configuracionCors))
+// servidor.use(cors(configuracionCors))
 servidor.use(express.json())
 servidor.use('/api/proyecto',rutas)
 
