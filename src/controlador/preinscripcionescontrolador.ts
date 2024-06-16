@@ -37,6 +37,7 @@ export class PreinscripcionesControlador{
             requerimiento.requerimiento3=req.body.requerimiento3
             requerimiento.requerimiento4=req.body.requerimiento4
             requerimiento.requerimiento5=req.body.requerimiento5
+            requerimiento.icono=req.body.icono
             await requerimiento.save();
             res.send("Requerimiento Actualizado");
         } catch (error) {
