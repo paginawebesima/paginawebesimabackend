@@ -3,8 +3,8 @@ import {body,param} from 'express-validator'
 import { TelefonoControlador } from "../controlador/telefonocontrolador";
 import { handleInputErrors } from "../middleware/validacion";
 import { PreinscripcionesControlador } from "../controlador/preinscripcionescontrolador";
-import { PrestamosControlador } from "../controlador/prestamoscontrolador";
 import { AuthController } from '../controlador/authControlador';
+import { PrestamosControlador } from "../controlador/prestamoscontrolador";
 
 
 const rutas = Router();
