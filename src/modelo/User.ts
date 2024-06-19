@@ -5,7 +5,6 @@ export interface IUser extends Document {
     password: string;
     name: string;
     rol: "Administrador" | "Gestor de Libros" | "Gestor de Salones";
-    confirmed: boolean;
 }
 
 const userSchema: Schema = new Schema({
@@ -28,10 +27,6 @@ const userSchema: Schema = new Schema({
         required: true,
         enum: ["Administrador", "Gestor de Libros", "Gestor de Salones"]
     },
-    confirmed: {
-        type: Boolean,
-        default: false
-    }
 });
 
 const User = mongoose.model<IUser>('User', userSchema);
