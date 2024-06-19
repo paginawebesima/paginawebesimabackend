@@ -6,7 +6,8 @@ export type IPreinscripciones=Document&{
     requerimiento2:string,
     requerimiento3:string,
     requerimiento4:string,
-    requerimiento5:string
+    requerimiento5:string,
+    icono:string
 }
 
 const PreinscripcionesShema:Schema=new Schema({
@@ -33,6 +34,10 @@ const PreinscripcionesShema:Schema=new Schema({
         trim:true
     },
     requerimiento5:{
+        type:String,
+        trim:true
+    },
+    icono:{
         type:String,
         trim:true
     }

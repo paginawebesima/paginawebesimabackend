@@ -3,6 +3,7 @@ import {body,param} from 'express-validator'
 import { TelefonoControlador } from "../controlador/telefonocontrolador";
 import { handleInputErrors } from "../middleware/validacion";
 import { PreinscripcionesControlador } from "../controlador/preinscripcionescontrolador";
+import { PrestamosControlador } from "../controlador/prestamoscontrolador";
 import { AuthController } from '../controlador/authControlador';
 
 
@@ -78,5 +79,79 @@ handleInputErrors,
 TelefonoControlador.creartelefono)
 
 rutas.get('/obtenerTelefono',TelefonoControlador.obtenerTelefono)
+
+rutas.get('/obtenerTelefono/:id',
+    param('id').isMongoId().withMessage("ID no es valido"),
+    handleInputErrors,
+    TelefonoControlador.obtenerTelefonoById
+)
+
+
+rutas.put('/actualizar/:id',
+    param('id').isMongoId().withMessage("ID no valido"),
+    body('telefono').notEmpty().withMessage("El telefono es obligatorio"),
+    handleInputErrors,
+    TelefonoControlador.actualizarTelefono
+)
+
+rutas.delete('/eliminarTel/:id',
+    param('id').isMongoId().withMessage("ID no valido"),
+    handleInputErrors,
+    TelefonoControlador.eliminarTelefono
+)
+
+
+//prestamos 
+
+rutas.get('/obtenerPrestamos',PrestamosControlador.obtenerPrestamos)
+
+rutas.get('/obtenerPrestamos/:id',
+    param('id').isMongoId().withMessage("El id no es valido"),
+    handleInputErrors,
+    PrestamosControlador.obtenerPrestamoId
+)
+
+rutas.post('/prestamo',
+    body('alumno').notEmpty().withMessage("El alumno es obligatorio"),
+    body('grado').notEmpty().withMessage("El grado es obligatorio"),
+    body('grupo').notEmpty().withMessage("El grupo es obligatorio"),
+    body('libro').notEmpty().withMessage("El libro es obligatorio"),
+    body('fechaprestamo').notEmpty().withMessage("La fecha prestamo es obligatoria"),
+    body('fechadevolucion').notEmpty().withMessage("La fecha devolucion es obligatoria"),
+
+    handleInputErrors,
+    PrestamosControlador.crearPrestamo
+)
+
+rutas.put('/actualizarPrestamo/:id',
+    param('id').isMongoId().withMessage("El id no es valido"),
+    body('alumno').notEmpty().withMessage("El alumno es obligatorio"),
+    body('grado').notEmpty().withMessage("El grado es obligatorio"),
+    body('grupo').notEmpty().withMessage("El grupo es obligatorio"),
+    body('libro').notEmpty().withMessage("El libro es obligatorio"),
+    body('fechaprestamo').notEmpty().withMessage("La fecha prestamo es obligatoria"),
+    body('fechadevolucion').notEmpty().withMessage("La fecha devolucion es obligatoria"),
+    handleInputErrors,
+    PrestamosControlador.actualizarPrestamos
+)
+rutas.delete('/eliminarPrestamo/:id',
+    param('id').isMongoId().withMessage("El ID no es valido"),
+    handleInputErrors,
+    PrestamosControlador.eliminarPrestamo
+)
+rutas.get("/", (req, res) => {
+    const htmlResponse = `
+      <html>
+        <head>
+          <title>NodeJs y Express en Vercel</title>
+        </head>
+        <body>
+          <h1>Soy un proyecto Back end en vercel</h1>
+        </body>
+      </html>
+    `;
+    res.send(htmlResponse);
+  });
+
 
 export default rutas;
