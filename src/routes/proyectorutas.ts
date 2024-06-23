@@ -182,6 +182,11 @@ rutas.delete('/eliminarPrestamo/:id',
     PrestamosControlador.eliminarPrestamo
 )
 
+rutas.get('/user',
+    authenticate,
+    AuthController.user
+)
+
 
 //clausura 
 
