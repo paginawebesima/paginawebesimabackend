@@ -6,6 +6,7 @@ import { PreinscripcionesControlador } from "../controlador/preinscripcionescont
 import { AuthController } from '../controlador/authControlador';
 import { PrestamosControlador } from "../controlador/prestamoscontrolador";
 import { authenticate } from "../middleware/auth";
+import { clausuraControlador } from "../controlador/clausuracontrolador";
 
 
 const rutas = Router();
@@ -180,23 +181,37 @@ rutas.delete('/eliminarPrestamo/:id',
     handleInputErrors,
     PrestamosControlador.eliminarPrestamo
 )
-rutas.get("/", (req, res) => {
-    const htmlResponse = `
-      <html>
-        <head>
-          <title>NodeJs y Express en Vercel</title>
-        </head>
-        <body>
-          <h1>Soy un proyecto Back end en vercel</h1>
-        </body>
-      </html>
-    `;
-    res.send(htmlResponse);
-});
 
-rutas.get('/user', 
-    authenticate,
-    AuthController.user
+
+//clausura 
+
+rutas.get('/obtenerClausura',
+    clausuraControlador.obtenerClausura
 )
 
+rutas.get('/obtenerClausuraId/:id',
+    param('id').isMongoId().withMessage("ID no es valido"),
+    handleInputErrors,
+    clausuraControlador.obtenerClausuraId
+)
+
+rutas.put('/actualizarClausura/:id',
+    param('id').isMongoId().withMessage("El id no es valido"),
+    body('titulo').notEmpty().withMessage("El titulo es obligatorio"),
+    body('informacion').notEmpty().withMessage("La informacion es obligatoria"),
+    handleInputErrors,
+    clausuraControlador.actualizarClausura
+)
+
+rutas.post('/crearClausura',
+    body('titulo').notEmpty().withMessage("El titulo es obligatorio"),
+    body('informacion').notEmpty().withMessage("La informacion es obligatoria"),
+    handleInputErrors,
+    clausuraControlador.crearClausura
+)
+rutas.delete('/eliminarClausura/:id',
+    param('id').isMongoId().withMessage("El ID no es valido"),
+    handleInputErrors,
+    clausuraControlador.eliminarClausura
+)
 export default rutas;
