@@ -20,3 +20,49 @@ export class Email {
         console.log('Mensaje enviado', info.messageId)
     }
 }
+
+interface IRequestEmail {
+    email: string
+    name: string
+    token: string
+}
+export class requestTokenEmail {
+    static sendEmail = async ( user: IRequestEmail) => {
+        const info = await transporter.sendMail({
+            from: 'ESIMA <admin@esima.com>',
+            to: user.email,
+            subject: 'Nuevo Token de Recuperación de Contraseña - ESIMA',
+            html: `
+                <p>Hola: ${user.name}, has solicitado un nuevo código.</p>
+                <p>Visita el siguiente enlace:</p>
+                <a href="${process.env.FRONTEND_URL}/new-password">Reestablecer Contraseña</a>
+                <p>e ingresa el código:<b>${user.token}</b></p>
+                <p>Este código expira en 10 minutos,</p>`
+        })
+
+        console.log('Mensaje enviado', info.messageId)
+    }
+}
+
+interface IRequestEmail {
+    email: string
+    name: string
+    token: string
+}
+export class sendPasswordResetToken {
+    static sendPasswordResetToken = async ( user: IRequestEmail) => {
+        const info = await transporter.sendMail({
+            from: 'ESIMA <admin@esima.com>',
+            to: user.email,
+            subject: 'ESIMA - Reestablece tu password',
+            html: `
+                <p>Hola: ${user.name}, has solicitado reestablecer tu contraseña.</p>
+                <p>Visita el siguiente enlace:</p>
+                <a href="${process.env.FRONTEND_URL}/new-password">Reestablecer Contraseña</a>
+                <p>e ingresa el código:<b>${user.token}</b></p>
+                <p>Este código expira en 10 minutos,</p>`
+        })
+
+        console.log('Mensaje enviado', info.messageId)
+    }
+}

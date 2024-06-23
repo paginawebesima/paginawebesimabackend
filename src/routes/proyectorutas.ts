@@ -1,16 +1,18 @@
 import { Router } from "express";
-import {body,param} from 'express-validator'
+import { body, param } from 'express-validator'
 import { TelefonoControlador } from "../controlador/telefonocontrolador";
 import { handleInputErrors } from "../middleware/validacion";
 import { PreinscripcionesControlador } from "../controlador/preinscripcionescontrolador";
 import { AuthController } from '../controlador/authControlador';
 import { PrestamosControlador } from "../controlador/prestamoscontrolador";
+import { authenticate } from "../middleware/auth";
 
 
 const rutas = Router();
 
 // Ruta para crear una cuenta
 rutas.post('/create-account',
+    authenticate,
     body('name')
         .notEmpty().withMessage('El nombre es un campo obligatorio.'),
     body('password')
@@ -40,9 +42,48 @@ rutas.post('/login',
     AuthController.login
 )
 
+// Reenviar token
+rutas.post('/request-code',
+    body('email')
+        .isEmail().withMessage('Correo no válido'),
+    handleInputErrors,
+    AuthController.requestRecoverPassword
+)
+
+// Reestablecer contraseña
+rutas.post('/forgot-password',
+    body('email')
+        .isEmail().withMessage('Correo no válido'),
+    handleInputErrors,
+    AuthController.forgotPassword
+)
+
+// Validar token
+rutas.post('/validate-token',
+    body('token')
+        .notEmpty().withMessage('El Token no puede ir vacio'),
+    handleInputErrors,
+   AuthController.validateToken
+)
+
+// Actualizar contraseña
+rutas.post('/update-password/:token',
+    param('token').isNumeric().withMessage('Token no válido'),
+    body('password')
+        .isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres.'),
+    body('password_confirmation').custom((value, { req }) => {
+        if (value !== req.body.password) {
+            throw new Error('Las contraseñas no coinciden.');
+        }
+        return true;
+    }),
+    handleInputErrors,
+   AuthController.updatePasswordWithToken
+)
+
 // Rutas hacia preinscripciones
 
-rutas.get('/obtenerRequerimientos',PreinscripcionesControlador.obtenerRequerimientos)
+rutas.get('/obtenerRequerimientos', PreinscripcionesControlador.obtenerRequerimientos)
 
 rutas.get('/requerimiento/:id',
     param('id').isMongoId().withMessage('ID no es valido'),
@@ -58,13 +99,13 @@ rutas.post('/preinscripciones',
 )
 
 rutas.put('/preinscripciones/:id'
-    ,param('id').isMongoId().withMessage('ID no valido')
-    ,body('titulo').notEmpty().withMessage('El titulo es obligatorio'),
+    , param('id').isMongoId().withMessage('ID no valido')
+    , body('titulo').notEmpty().withMessage('El titulo es obligatorio'),
     body('requerimiento1').notEmpty().withMessage('Es obligatorio')
-,
-handleInputErrors
-,
-PreinscripcionesControlador.actualizarRequerimientos)
+    ,
+    handleInputErrors
+    ,
+    PreinscripcionesControlador.actualizarRequerimientos)
 
 rutas.delete('/preinscripciones/eliminar/:id',
     param('id').isMongoId().withMessage('ID no es valido'),
@@ -74,11 +115,11 @@ rutas.delete('/preinscripciones/eliminar/:id',
 // Rutas para actualizar el telefono
 
 rutas.post('/crearnumero',
-body('telefono').notEmpty().withMessage("El telefono es obligatorio"),
-handleInputErrors,
-TelefonoControlador.creartelefono)
+    body('telefono').notEmpty().withMessage("El telefono es obligatorio"),
+    handleInputErrors,
+    TelefonoControlador.creartelefono)
 
-rutas.get('/obtenerTelefono',TelefonoControlador.obtenerTelefono)
+rutas.get('/obtenerTelefono', TelefonoControlador.obtenerTelefono)
 
 rutas.get('/obtenerTelefono/:id',
     param('id').isMongoId().withMessage("ID no es valido"),
@@ -103,7 +144,7 @@ rutas.delete('/eliminarTel/:id',
 
 //prestamos 
 
-rutas.get('/obtenerPrestamos',PrestamosControlador.obtenerPrestamos)
+rutas.get('/obtenerPrestamos', PrestamosControlador.obtenerPrestamos)
 
 rutas.get('/obtenerPrestamos/:id',
     param('id').isMongoId().withMessage("El id no es valido"),
@@ -151,7 +192,11 @@ rutas.get("/", (req, res) => {
       </html>
     `;
     res.send(htmlResponse);
-  });
+});
 
+rutas.get('/user', 
+    authenticate,
+    AuthController.user
+)
 
 export default rutas;
