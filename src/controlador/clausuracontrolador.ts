@@ -34,7 +34,7 @@ export class clausuraControlador{
             clausura.titulo=req.body.titulo
             clausura.informacion= req.body.informacion
             await clausura.save();
-            res.send("titulo clausura creado correctamente")
+            res.send("Titulo clausura actualizado correctamente")
         } catch (error) {
             console.log(error)
         }

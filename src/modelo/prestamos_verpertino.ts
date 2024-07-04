@@ -1,6 +1,6 @@
 import mogoose,{Schema,Document} from 'mongoose'
 
-export type Prestamos = Document&{
+export type Prestamos_Verpertino=Document &{
     alumno:string,
     grado:string,
     grupo:string,
@@ -10,7 +10,7 @@ export type Prestamos = Document&{
     personaAutorizacion:string
 }
 
-const PrestamosShema:Schema=new Schema({
+const Prestamos_Schema_Vespertino:Schema=new Schema({
     alumno:{
         type:String,
         require:true,
@@ -48,7 +48,7 @@ const PrestamosShema:Schema=new Schema({
 })
 
 
-const PrestamosModelo=mogoose.model<Prestamos>('Prestamos',PrestamosShema)
+const Prestamos_Vespertino_modelo=mogoose.model<Prestamos_Verpertino>('Prestamos_Vespertino',Prestamos_Schema_Vespertino)
 
 
-export default PrestamosModelo
+export default Prestamos_Vespertino_modelo

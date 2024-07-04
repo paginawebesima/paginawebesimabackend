@@ -7,6 +7,8 @@ import { AuthController } from '../controlador/authControlador';
 import { PrestamosControlador } from "../controlador/prestamoscontrolador";
 import { authenticate } from "../middleware/auth";
 import { clausuraControlador } from "../controlador/clausuracontrolador";
+import { Prestamos_Controlador_Vespertino } from "../controlador/prestamos_vespertino";
+import { Proceso_Controlador } from "../controlador/procesoControlador";
 
 
 const rutas = Router();
@@ -160,7 +162,7 @@ rutas.post('/prestamo',
     body('libro').notEmpty().withMessage("El libro es obligatorio"),
     body('fechaprestamo').notEmpty().withMessage("La fecha prestamo es obligatoria"),
     body('fechadevolucion').notEmpty().withMessage("La fecha devolucion es obligatoria"),
-
+    body('personaAutorizacion').notEmpty().withMessage("La persona quien autoriza es obligatoria"),
     handleInputErrors,
     PrestamosControlador.crearPrestamo
 )
@@ -219,4 +221,65 @@ rutas.delete('/eliminarClausura/:id',
     handleInputErrors,
     clausuraControlador.eliminarClausura
 )
+
+rutas.get('/obtenerPrestamosVespertino',Prestamos_Controlador_Vespertino.obtenerPrestamos_vespertino)
+
+rutas.get('/obtenerPrestamos_Vespertino/:id',
+    param('id').isMongoId().withMessage("ID no es valido"),
+    handleInputErrors,
+    Prestamos_Controlador_Vespertino.obtenerPrestamoId_Vespertino
+)
+
+rutas.post('/crearPrestamoVerpertino',
+    body('alumno').notEmpty().withMessage("El alumno es obligatorio"),
+    body('grado').notEmpty().withMessage("El grado es obligatorio"),
+    body('grupo').notEmpty().withMessage("El grupo es obligatorio"),
+    body('libro').notEmpty().withMessage("El libro es obligatorio"),
+    body('fechaprestamo').notEmpty().withMessage("La fecha prestamo es obligatoria"),
+    body('fechadevolucion').notEmpty().withMessage("La fecha devolucion es obligatoria"),
+    body('personaAutorizacion').notEmpty().withMessage("La persona quien autoriza es obligatoria"),
+    handleInputErrors,
+    Prestamos_Controlador_Vespertino.crearPrestamoVespertino
+)
+
+rutas.put('/actualizarPrestamos_Vespertino/:id',
+    param('id').isMongoId().withMessage("El id no es valido"),
+    body('alumno').notEmpty().withMessage("El alumno es obligatorio"),
+    body('grado').notEmpty().withMessage("El grado es obligatorio"),
+    body('grupo').notEmpty().withMessage("El grupo es obligatorio"),
+    body('libro').notEmpty().withMessage("El libro es obligatorio"),
+    body('fechaprestamo').notEmpty().withMessage("La fecha prestamo es obligatoria"),
+    body('fechadevolucion').notEmpty().withMessage("La fecha devolucion es obligatoria"),
+    handleInputErrors,
+    Prestamos_Controlador_Vespertino.actualizarPrestamos_Vespertino
+)
+
+rutas.delete('/eliminarPrestamos_Vespertino/:id',
+    param('id').isMongoId().withMessage("El ID no es valido"),
+    handleInputErrors,
+    Prestamos_Controlador_Vespertino.eliminarPrestamo_Vespertino
+)
+
+rutas.get('/obtenerProceso',
+    Proceso_Controlador.obtenerProceso
+)
+
+rutas.post('/crearProceso',
+    body('boolean').notEmpty().withMessage("Es obligatorio"),
+    handleInputErrors,
+    Proceso_Controlador.crearProceso
+)
+
+rutas.put('/activarProceso/:id',
+    param('id').isMongoId().withMessage("El id no es valido"),
+    handleInputErrors,
+    Proceso_Controlador.activarProceso
+)
+rutas.put('/desactivarProceso/:id',
+    param('id').isMongoId().withMessage("El id no es valido"),
+    handleInputErrors,
+    Proceso_Controlador.desactivarProceso
+)
+
+
 export default rutas;
