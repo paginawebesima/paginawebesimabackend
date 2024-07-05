@@ -9,6 +9,7 @@ import { authenticate } from "../middleware/auth";
 import { clausuraControlador } from "../controlador/clausuracontrolador";
 import { Prestamos_Controlador_Vespertino } from "../controlador/prestamos_vespertino";
 import { Proceso_Controlador } from "../controlador/procesoControlador";
+import { administrativosControlador } from "../controlador/administrativoscontrolador";
 
 
 const rutas = Router();
@@ -219,6 +220,38 @@ rutas.delete('/eliminarClausura/:id',
     param('id').isMongoId().withMessage("El ID no es valido"),
     handleInputErrors,
     clausuraControlador.eliminarClausura
+)
+
+//administrativos
+
+rutas.get('/obtenerAdministrativos',
+    administrativosControlador.obtenerAdministrativos
+)
+
+rutas.get('/obtenerAdministrativosId/:id',
+    param('id').isMongoId().withMessage("ID no es valido"),
+    handleInputErrors,
+    administrativosControlador.obtenerAdministrativosId
+)
+
+rutas.put('/actualizarAdministrativos/:id',
+    param('id').isMongoId().withMessage("El id no es valido"),
+    body('directivo').notEmpty().withMessage("El nombre del directivo es obligatorio"),
+    body('cargo').notEmpty().withMessage("El cargo del directivo es obligatorio"),
+    handleInputErrors,
+    administrativosControlador.actualizarAdministrativos
+)
+
+rutas.post('/crearAdministrativos',
+    body('directivo').notEmpty().withMessage("El nombre del directivo es obligatorio"),
+    body('cargo').notEmpty().withMessage("El cargo del directivo es obligatorio"),
+    handleInputErrors,
+    administrativosControlador.crearAdministrativos
+)
+rutas.delete('/eliminarAdministrativos/:id',
+    param('id').isMongoId().withMessage("El ID no es valido"),
+    handleInputErrors,
+    administrativosControlador.eliminarAdministrativos
 )
 
 rutas.get('/obtenerPrestamosVespertino',Prestamos_Controlador_Vespertino.obtenerPrestamos_vespertino)
