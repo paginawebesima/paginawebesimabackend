@@ -187,7 +187,6 @@ rutas.get('/user',
     AuthController.user
 )
 
-
 //clausura 
 
 rutas.get('/obtenerClausura',

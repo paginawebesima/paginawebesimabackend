@@ -62,7 +62,7 @@ export class AuthController {
             }
 
             const token = generateJWT({ id: user.id })
-            res.send(token)
+            res.send({ token, rol: user.rol });
 
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
@@ -174,6 +174,15 @@ export class AuthController {
     }
 
     static user = async (req: Request, res: Response) => {
-        return res.json(req.user)
+        try {
+            const userId = req.user;
+            const user = await User.findById(userId).select('_id email name rol');
+            if (!user) {
+                return res.status(404).json({ error: 'Usuario no encontrado' });
+            }
+            res.json(user);
+        } catch (error) {
+            res.status(500).json({ error: 'Hubo un error' });
+        }
     }
 }
