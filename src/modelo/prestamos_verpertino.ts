@@ -1,10 +1,10 @@
-import mogoose,{Schema,Document} from 'mongoose'
+import mongoose,{Schema,Document} from 'mongoose'
 
 export type Prestamos_Verpertino=Document &{
     alumno:string,
     grado:string,
     grupo:string,
-    libro:string,
+    libro: mongoose.Schema.Types.ObjectId,
     fechaprestamo:string,
     fechadevolucion:string,
     personaAutorizacion:string
@@ -27,9 +27,9 @@ const Prestamos_Schema_Vespertino:Schema=new Schema({
         trim:true
     },
     libro:{
-        type:String,
-        require:true,
-        trim:true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Inventario',
+        required: true
     },
     fechaprestamo:{
         type:String,
@@ -47,8 +47,5 @@ const Prestamos_Schema_Vespertino:Schema=new Schema({
 
 })
 
-
-const Prestamos_Vespertino_modelo=mogoose.model<Prestamos_Verpertino>('Prestamos_Vespertino',Prestamos_Schema_Vespertino)
-
-
+const Prestamos_Vespertino_modelo=mongoose.model<Prestamos_Verpertino>('Prestamos_Vespertino',Prestamos_Schema_Vespertino)
 export default Prestamos_Vespertino_modelo

@@ -10,6 +10,8 @@ import { clausuraControlador } from "../controlador/clausuracontrolador";
 import { Prestamos_Controlador_Vespertino } from "../controlador/prestamos_vespertino";
 import { Proceso_Controlador } from "../controlador/procesoControlador";
 import { administrativosControlador } from "../controlador/administrativoscontrolador";
+import { UsuariosControlador } from "../controlador/usuarioscontrolador";
+import { InventarioControlador } from "../controlador/inventariocontrolador";
 
 
 const rutas = Router();
@@ -34,6 +36,37 @@ rutas.post('/create-account',
         .isIn(['Administrador', 'Gestor de Libros', 'Gestor de Salones']).withMessage('El rol especificado no es válido.'),
     handleInputErrors,
     AuthController.createAccount
+)
+
+// Usuarios
+rutas.get('/obtenerUsuarios', UsuariosControlador.obtenerUsuarios)
+
+rutas.get('/obtenerUsuarios/:id',
+    param('id').isMongoId().withMessage("El id no es valido"),
+    handleInputErrors,
+    UsuariosControlador.obtenerUsuariosId
+)
+
+rutas.post('/crearUsuarios',
+    body('name').notEmpty().withMessage("El nombre es obligatorio"),
+    body('email').notEmpty().withMessage("El correo es obligatorio"),
+    body('rol').notEmpty().withMessage("El rol es obligatorio"),
+    handleInputErrors,
+    UsuariosControlador.crearUsuarios
+)
+
+rutas.put('/actualizarUsuarios/:id',
+    param('id').isMongoId().withMessage("El id no es valido"),
+    body('name').notEmpty().withMessage("El nombre es obligatorio"),
+    body('email').notEmpty().withMessage("El email es obligatorio"),
+    body('rol').notEmpty().withMessage("El rol es obligatorio"),
+    handleInputErrors,
+    UsuariosControlador.actualizarUsuarios
+)
+rutas.delete('/eliminarUsuarios/:id',
+    param('id').isMongoId().withMessage("El ID no es valido"),
+    handleInputErrors,
+    UsuariosControlador.eliminarUsuarios
 )
 
 // Ruta para el inicio de sesión
@@ -147,7 +180,6 @@ rutas.delete('/eliminarTel/:id',
 
 
 //prestamos 
-
 rutas.get('/obtenerPrestamos', PrestamosControlador.obtenerPrestamos)
 
 rutas.get('/obtenerPrestamos/:id',
@@ -183,6 +215,40 @@ rutas.delete('/eliminarPrestamo/:id',
     param('id').isMongoId().withMessage("El ID no es valido"),
     handleInputErrors,
     PrestamosControlador.eliminarPrestamo
+)
+
+//inventario
+rutas.get('/obtenerLibros', InventarioControlador.obtenerLibros)
+rutas.get('/obtenerLibrosDisponibles', InventarioControlador.obtenerLibrosDisponibles)
+
+rutas.get('/obtenerLibros/:id',
+    param('id').isMongoId().withMessage("El id no es valido"),
+    handleInputErrors,
+    InventarioControlador.obtenerLibrosId
+)
+
+rutas.post('/inventario',
+    body('titulo').notEmpty().withMessage("El titulo es obligatorio"),
+    body('autor').notEmpty().withMessage("El autor es obligatorio"),
+    body('genero').notEmpty().withMessage("El género es obligatorio"),
+    body('cantidad_total').notEmpty().withMessage("La cantidad total es obligatoria"),
+    handleInputErrors,
+    InventarioControlador.crearLibros
+)
+
+rutas.put('/actualizarLibros/:id',
+    param('id').isMongoId().withMessage("El id no es valido"),
+    body('titulo').notEmpty().withMessage("El titulo es obligatorio"),
+    body('autor').notEmpty().withMessage("El autor es obligatorio"),
+    body('genero').notEmpty().withMessage("El género es obligatorio"),
+    body('cantidad_total').notEmpty().withMessage("La cantidad es obligatoria"),
+    handleInputErrors,
+    InventarioControlador.actualizarLibros
+)
+rutas.delete('/eliminarLibros/:id',
+    param('id').isMongoId().withMessage("El ID no es valido"),
+    handleInputErrors,
+    InventarioControlador.eliminarLibros
 )
 
 rutas.get('/user',

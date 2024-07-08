@@ -1,54 +1,51 @@
-import mogoose,{Schema,Document} from 'mongoose'
+import mongoose, { Schema, Document } from 'mongoose';
 
-export type Prestamos = Document&{
-    alumno:string,
-    grado:string,
-    grupo:string,
-    libro:string,
-    fechaprestamo:string,
-    fechadevolucion:string,
-    personaAutorizacion:string
+export type Prestamos = Document & {
+    alumno: string,
+    grado: string,
+    grupo: string,
+    libro: mongoose.Schema.Types.ObjectId,
+    fechaprestamo: string,
+    fechadevolucion: string,
+    personaAutorizacion: string
 }
 
-const PrestamosShema:Schema=new Schema({
-    alumno:{
-        type:String,
-        require:true,
-        trim:true
+const PrestamosSchema: Schema = new Schema({
+    alumno: {
+        type: String,
+        required: true,
+        trim: true
     },
-    grado:{
-        type:String,
-        require:true,
-        trim:true
+    grado: {
+        type: String,
+        required: true,
+        trim: true
     },
-    grupo:{
-        type:String,
-        require:true,
-        trim:true
+    grupo: {
+        type: String,
+        required: true,
+        trim: true
     },
-    libro:{
-        type:String,
-        require:true,
-        trim:true
+    libro: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Inventario',
+        required: true
     },
-    fechaprestamo:{
-        type:String,
-        require:true,
-        trim:true
+    fechaprestamo: {
+        type: String,
+        required: true,
+        trim: true
     },
-    fechadevolucion:{
-        type:String,
-        require:true,
-        trim:true
+    fechadevolucion: {
+        type: String,
+        required: true,
+        trim: true
     },
-    personaAutorizacion:{
-        type:String
+    personaAutorizacion: {
+        type: String
     }
+});
 
-})
+const PrestamosModelo = mongoose.model<Prestamos>('Prestamos', PrestamosSchema);
 
-
-const PrestamosModelo=mogoose.model<Prestamos>('Prestamos',PrestamosShema)
-
-
-export default PrestamosModelo
+export default PrestamosModelo;

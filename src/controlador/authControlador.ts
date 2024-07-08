@@ -38,7 +38,7 @@ export class AuthController {
             await user.save()
 
             await Promise.allSettled([user.save()])
-            res.send('Cuenta creada, revisa tu correo')
+            res.send('Cuenta creada exitosamente')
 
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })

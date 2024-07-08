@@ -1,22 +1,36 @@
 import type { Request,Response } from "express";
 import Prestamos_Vespertino_modelo from "../modelo/prestamos_verpertino";
+import InventarioModelo from "../modelo/inventario";
 
 
 export class Prestamos_Controlador_Vespertino{
     static crearPrestamoVespertino=async(req:Request,res:Response)=>{
-        const prestamosInformacion_vespertino= new Prestamos_Vespertino_modelo(req.body)
+        const { libro: libroTitulo, ...prestamoData } = req.body
         try {
-            await prestamosInformacion_vespertino.save();
+            const inventario = await InventarioModelo.findOne({ titulo: libroTitulo })
+            if (!inventario) {
+                return res.status(404).json({ error: "Libro no encontrado en inventario" })
+            }
+
+            if (inventario.cantidad_disponible === 0) {
+                return res.status(400).json({ error: "No hay suficientes libros disponibles" })
+            }
+
+            const prestamo = new Prestamos_Vespertino_modelo({ ...prestamoData, libro: inventario._id });
+            await prestamo.save();
+
+            inventario.cantidad_disponible -= 1
+            await inventario.save()
+
             res.send("Prestamo creado correctamente")
         } catch (error) {
-            console.log(error)
+            console.log("Ha sucedido un error", error)
+            res.status(500).send("Error al crear el préstamo")
         }
     }
     static obtenerPrestamos_vespertino=async(req:Request,res:Response)=>{
         try {
-            const prestamos_vespertino=await Prestamos_Vespertino_modelo.find({
-
-            })
+            const prestamos_vespertino=await Prestamos_Vespertino_modelo.find({}).populate('libro', 'titulo');
             res.json(prestamos_vespertino)
         } catch (error) {
             console.log(error)
@@ -50,10 +64,18 @@ export class Prestamos_Controlador_Vespertino{
                 const error = new Error("Prestamo no encontrado")
                 return res.status(404).json({error:error.message})
             }
+
+            const inventario = await InventarioModelo.findById(prestamos_verpertino.libro)
+            if (inventario) {
+                inventario.cantidad_disponible += 1
+                await inventario.save()
+            }
+
             await prestamos_verpertino.deleteOne();
-            res.send("Informacion prestamo eliminada")
+            res.send("Informacion del prestamo eliminada")
         } catch (error) {
             console.log(error)
+            res.status(500).send("Error al eliminar el préstamo")
         }
     }
     static obtenerPrestamoId_Vespertino=async(req:Request,res:Response)=>{
