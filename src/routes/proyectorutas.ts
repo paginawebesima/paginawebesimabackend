@@ -12,7 +12,7 @@ import { Proceso_Controlador } from "../controlador/procesoControlador";
 import { administrativosControlador } from "../controlador/administrativoscontrolador";
 import { UsuariosControlador } from "../controlador/usuarioscontrolador";
 import { InventarioControlador } from "../controlador/inventariocontrolador";
-
+import { TareaControlador } from "../controlador/tareacontrolador";
 
 const rutas = Router();
 
@@ -379,5 +379,45 @@ rutas.put('/desactivarProceso/:id',
     Proceso_Controlador.desactivarProceso
 )
 
+//tareas
+rutas.post('/crearTareas', 
+    authenticate,
+    body('nombre').notEmpty().withMessage('El nombre de la tarea es obligatorio'),
+    body('descripcion').notEmpty().withMessage('La descripción de la tarea es obligatoria'),
+    handleInputErrors,
+    TareaControlador.crearTarea
+);
+
+rutas.get('/obtenerTareas', 
+    authenticate,
+    TareaControlador.obtenerTareas
+);
+
+rutas.get('/obtenerTareas/:id',
+    param('id').isMongoId().withMessage('ID no válido'),
+    handleInputErrors,
+    TareaControlador.obtenerTareaById
+);
+
+rutas.put('/actualizarTareas/:id',
+    param('id').isMongoId().withMessage('ID no válido'),
+    body('nombre').notEmpty().withMessage('El nombre de la tarea es obligatorio'),
+    body('descripcion').notEmpty().withMessage('La descripción de la tarea es obligatoria'),
+    handleInputErrors,
+    TareaControlador.actualizarTarea
+);
+
+rutas.delete('/eliminarTareas/:id',
+    param('id').isMongoId().withMessage('ID no válido'),
+    handleInputErrors,
+    TareaControlador.eliminarTarea
+);
+
+rutas.post('/actualizarTareas/:id/estado', 
+    param('id').isMongoId().withMessage('ID no válido'),
+    body('estado').notEmpty().withMessage('El estado es obligatorio'),
+    handleInputErrors,
+    TareaControlador.actualizarEstado
+);
 
 export default rutas;
