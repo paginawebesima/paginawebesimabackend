@@ -13,6 +13,8 @@ import { administrativosControlador } from "../controlador/administrativoscontro
 import { UsuariosControlador } from "../controlador/usuarioscontrolador";
 import { InventarioControlador } from "../controlador/inventariocontrolador";
 import { TareaControlador } from "../controlador/tareacontrolador";
+import { administracionsaloncontrolador } from "../controlador/administracionsalones";
+
 
 const rutas = Router();
 
@@ -419,5 +421,42 @@ rutas.post('/actualizarTareas/:id/estado',
     handleInputErrors,
     TareaControlador.actualizarEstado
 );
+
+rutas.get('/obtenerAdministracion',
+    administracionsaloncontrolador.obtenerAdministracion
+)
+
+rutas.get('/obtenerAdministracionSalon/:id',
+    param('id').isMongoId().withMessage("ID no es valido"),
+    handleInputErrors,
+    administracionsaloncontrolador.obtenerAdministracionById
+)
+
+rutas.delete('/eliminarAdministracion/:id',
+    param('id').isMongoId().withMessage("El ID no es valido"),
+    handleInputErrors,
+    administracionsaloncontrolador.eliminarAdministracion
+)
+
+rutas.put('/actualizarAdministracion/:id',
+    param('id').isMongoId().withMessage("El id no es valido"),
+    body('persona').notEmpty().withMessage("La persona es obligatoria"),
+    body('fecha').notEmpty().withMessage("La fecha es obligatoria"),
+    body('hora_inicio').notEmpty().withMessage("La hora inicio es obligatoria"),
+    body('hora_final').notEmpty().withMessage("La hora final es obligatoria"),
+    body('motivo').notEmpty().withMessage("El motivo es obligatorio"),
+    handleInputErrors,
+    administracionsaloncontrolador.actualizarAdministracion
+)
+
+rutas.post('/crearPrestamoSalon',
+    body('persona').notEmpty().withMessage("La persona es obligatoria"),
+    body('fecha').notEmpty().withMessage("La fecha es obligatoria"),
+    body('hora_inicio').notEmpty().withMessage("La hora inicio es obligatoria"),
+    body('hora_final').notEmpty().withMessage("La hora final es obligatoria"),
+    body('motivo').notEmpty().withMessage("El motivo es obligatorio"),
+    handleInputErrors,
+    administracionsaloncontrolador.crearAdministracion
+)
 
 export default rutas;
